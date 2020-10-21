@@ -16,14 +16,14 @@ public class AmbiguousImagePullTest {
     public void testNotUsingParse() {
         DockerClient client = DockerClientFactory.instance().client();
         List<Image> alpineImages = client.listImagesCmd()
-            .withImageNameFilter("alpine:latest")
+            .withImageNameFilter("testcontainers/helloworld:latest")
             .exec();
         for (Image alpineImage : alpineImages) {
             client.removeImageCmd(alpineImage.getId()).exec();
         }
 
         try (
-            final GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse("alpine"))
+            final GenericContainer<?> container = new GenericContainer<>(DockerImageName.parse("testcontainers/helloworld"))
                 .withCommand("/bin/sh", "-c", "sleep 0")
                 .withStartupCheckStrategy(new OneShotStartupCheckStrategy())
         ) {
